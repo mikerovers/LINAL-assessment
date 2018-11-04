@@ -1,0 +1,10 @@
+#ifndef LINAL_ASSESSMENT_VECTOR_H
+#define LINAL_ASSESSMENT_VECTOR_H
+
+class Vector
+{
+
+};
+
+
+#endif //LINAL_ASSESSMENT_VECTOR_H
