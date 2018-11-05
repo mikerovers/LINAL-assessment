@@ -4,7 +4,9 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Lineaire dingen");
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 0;
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Lineaire dingen", sf::Style::Default, settings);
 
     std::vector<Vector*> vectors;
     vectors.push_back(new Vector(60, 60));
@@ -29,6 +31,13 @@ int main()
         sf::RectangleShape xLine(sf::Vector2f(1200.f, 1.f));
         xLine.setPosition(0, 300);
         window.draw(xLine);
+
+        for (auto* v : vectors) {
+            sf::CircleShape shape(5.f);
+            shape.setFillColor(sf::Color::Blue);
+            shape.setPosition(static_cast<float>(v->getX()), static_cast<float>(v->getY()));
+            window.draw(shape);
+        }
 
         window.display();
     }
