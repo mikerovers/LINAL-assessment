@@ -1,6 +1,6 @@
 #include <catch.hpp>
 
-SCENARIO( "vectors can be sized and resized", "[vector]" ) {
+SCENARIO( "vectors can be sized and resized", "[sdt::vector]" ) {
     GIVEN( "A vector with some items" ) {
         std::vector<int> v( 5 );
 

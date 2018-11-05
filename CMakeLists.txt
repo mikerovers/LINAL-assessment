@@ -7,9 +7,12 @@ set(CMAKE_C_COMPILER_INIT gcc)
 enable_testing()
 add_subdirectory(tests)
 
+set(PROJECT_SOURCES main.cpp src/Vector.cpp src/Vector.h)
+
 message( "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}" )
 if ( "${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG" )
     add_definitions(-D_DEBUG)
 endif()
 
-add_executable(LINAL-assessment main.cpp src/Vector.cpp src/Vector.h)
+add_executable(LINAL-assessment ${PROJECT_SOURCES})
+add_library(LINAL-library ${PROJECT_SOURCES})

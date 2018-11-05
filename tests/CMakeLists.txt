@@ -1,4 +1,5 @@
-set(UNIT_TEST_LIST std-vector)
+set(UNIT_TEST_LIST
+        std-vector)
 
 foreach(NAME IN LISTS UNIT_TEST_LIST)
     list(APPEND UNIT_TEST_SOURCE_LIST
@@ -7,10 +8,17 @@ endforeach()
 
 set(TARGET_NAME tests)
 
-add_executable(${TARGET_NAME} main.cpp ${UNIT_TEST_SOURCE_LIST})
+add_executable(${TARGET_NAME}
+        testmain.cpp
+        vector.test.cpp
+        ${UNIT_TEST_SOURCE_LIST})
 
-#target_link_libraries(${TARGET_NAME} PUBLIC LINAL-assessment)
+target_link_libraries(${TARGET_NAME}
+        PUBLIC LINAL-library)
 
-target_include_directories(${TARGET_NAME} PUBLIC ../external/catch2/)
+target_include_directories(${TARGET_NAME}
+        PUBLIC ../external/catch2/)
 
-add_test(NAME ${TARGET_NAME} COMMAND ${TARGET_NAME} -o report.xml -r junit)
+add_test(
+        NAME ${TARGET_NAME}
+        COMMAND ${TARGET_NAME} -o report.xml -r junit)
