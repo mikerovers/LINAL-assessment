@@ -14,5 +14,8 @@ if ( "${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG" )
     add_definitions(-D_DEBUG)
 endif()
 
+add_subdirectory(external/SFML)
+
 add_executable(LINAL-assessment ${PROJECT_SOURCES})
 add_library(LINAL-library ${PROJECT_SOURCES})
+target_link_libraries(LINAL-assessment sfml-graphics sfml-window)
