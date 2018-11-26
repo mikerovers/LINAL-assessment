@@ -2,6 +2,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "Matrix.h"
 #include "Vector2D.h"
+#include <cmath>
 
 Matrix::Matrix(const Matrix &other)
 {
@@ -105,6 +106,21 @@ Matrix Matrix::ScalingMatrix(double xScalar, double yScalar)
     return m;
 }
 
+Matrix Matrix::RotationMatrix(int degree)
+{
+    auto m = Matrix{3, 3, 0.0};
+
+    auto radial = toRadial(degree);
+
+    m(0, 0) = cos(radial);
+    m(0, 1) = -1 * sin(radial);
+    m(1, 0) = sin(radial);
+    m(1, 1) = cos(radial);
+    m(2, 2) = 1;
+
+    return m;
+}
+
 Matrix Matrix::Matrix2D(unsigned int columns)
 {
     auto m = Matrix{2, columns, 0.0};
@@ -193,6 +209,24 @@ void Matrix::scale(double xValue, double yValue)
     }
 }
 
+void Matrix::rotate(int amountInDegree)
+{
+    auto origin = getOrigin();
+    auto r1 = Matrix::RotationMatrix(amountInDegree);
+    auto t1 = Matrix::TranslationMatrix(origin.getX(), origin.getY());
+    auto t2 = Matrix::TranslationMatrix(-1 * origin.getX(), -1 * origin.getY());
+
+    for (coordindate i = 0; i < getColumns(); ++i) {
+        auto vertex = Vector2D{matrix[0][i], matrix[1][i]};
+        t2 * vertex;
+        r1 * vertex;
+        t1 * vertex;
+
+        matrix[0][i] = vertex.getX();
+        matrix[1][i] = vertex.getY();
+    }
+}
+
 Vector2D Matrix::get(unsigned int column) const
 {
     return Vector2D{matrix[0][column], matrix[1][column]};
@@ -210,4 +244,9 @@ const Vector2D Matrix::getOrigin() const
     v.setY(v.getY() / getColumns());
 
     return v;
+}
+
+double Matrix::toRadial(int degree)
+{
+    return degree * M_PI / 180;
 }

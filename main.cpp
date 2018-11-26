@@ -19,7 +19,6 @@ int main()
     auto s1 = Matrix::ScalingMatrix(2, 2);
 
     auto res = t1 * s1 * t2;
-    res.print();
 
     auto m6 = Matrix::Matrix2D(4);
     m6(0, 0) = 50;
@@ -33,6 +32,8 @@ int main()
 
     m6(0, 3) = 300;
     m6(1, 3) = 300;
+
+    auto rM = Matrix::RotationMatrix(60);
 
     window.setKeyRepeatEnabled(false);
 
@@ -57,37 +58,34 @@ int main()
 
         m6.draw(window);
 
-        if (event.type == sf::Event::KeyPressed)
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
         {
-            if (event.key.code == sf::Keyboard::LControl)
-            {
-                m6.scale(1.001, 1.001);
-            }
+            m6.translate(-1, 0);
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+        {
+            m6.translate(1, 0);
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+        {
+            m6.translate(0, -1);
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+        {
+            m6.translate(0, 1);
+        }
 
-            if (event.key.code == sf::Keyboard::LAlt)
-            {
-                m6.scale(0.999, 0.999);
-            }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+        {
+            m6.rotate(-1);
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+        {
+            m6.rotate(1);
+        }
 
-            if (event.key.code == sf::Keyboard::Left)
-            {
-                m6.translate(-1, 0);
-            }
-
-            if (event.key.code == sf::Keyboard::Right)
-            {
-                m6.translate(1, 0);
-            }
-
-            if (event.key.code == sf::Keyboard::Up)
-            {
-                m6.translate(0, -1);
-            }
-
-            if (event.key.code == sf::Keyboard::Down)
-            {
-                m6.translate(0, 1);
-            }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+        {
+            m6.scale(1.001, 1.001);
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
+        {
+            m6.scale(0.999, 0.999);
         }
 
         for (auto* v : vectors) {

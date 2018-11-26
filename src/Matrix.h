@@ -18,6 +18,7 @@ public:
     static Matrix UnitMatrix(unsigned int size);
     static Matrix TranslationMatrix(double xTranslation, double yTranslation);
     static Matrix ScalingMatrix(double xScalar, double yScalar);
+    static Matrix RotationMatrix(int degree);
     static Matrix Matrix2D(unsigned int columns);
 
     void print() const;
@@ -30,6 +31,7 @@ public:
     void scale(double xValue, double yValue);
     void translate(double xValue, double yValue);
     void draw(sf::RenderWindow& window) const;
+    void rotate(int amountInDegree);
 
     Vector2D get(unsigned int column) const;
     const Vector2D getOrigin() const;
@@ -41,6 +43,8 @@ protected:
     unsigned int rows;
     unsigned int columns;
     std::vector<std::vector<double>> matrix;
+
+    static double toRadial(int degree);
 };
 
 
