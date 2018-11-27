@@ -37,6 +37,9 @@ int main()
 
     window.setKeyRepeatEnabled(false);
 
+    sf::View view(sf::Vector2f(0, 0), sf::Vector2f(800.f, 600.f));
+    window.setView(view);
+
     while (window.isOpen()) {
         sf::Event event;
         while(window.pollEvent(event)) {
@@ -48,12 +51,12 @@ int main()
         window.clear(sf::Color::Black);
 
         sf::RectangleShape yLine(sf::Vector2f(600.f, 1.f));
-        yLine.setPosition(400, 0);
+        yLine.setPosition(0, -1 * view.getSize().y / 2);
         yLine.rotate(90);
         window.draw(yLine);
 
         sf::RectangleShape xLine(sf::Vector2f(1200.f, 1.f));
-        xLine.setPosition(0, 300);
+        xLine.setPosition(-1 * view.getSize().x / 2, 0);
         window.draw(xLine);
 
         m6.draw(window);
