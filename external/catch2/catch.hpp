@@ -2789,7 +2789,7 @@ namespace Catch {
                 std::vector<T> const& m_target;
             };
 
-        } // namespace Vector
+        } // namespace Vector2D
 
         // The following functions create the actual matcher objects.
         // This allows the types to be inferred
