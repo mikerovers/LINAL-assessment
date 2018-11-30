@@ -734,7 +734,7 @@ void RenderTarget::cleanupDraw(const RenderStates& states)
 ////////////////////////////////////////////////////////////
 // Render states caching strategies
 //
-// * View
+// * ViewType
 //   If SetView was called since last draw, the projection
 //   matrix is updated. We don't need more, the view doesn't
 //   change frequently.
