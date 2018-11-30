@@ -1207,7 +1207,7 @@
 					</object>
 					<object class="NSMenuItem" id="586577488">
 						<reference key="NSMenu" ref="649796088"/>
-						<string key="NSTitle">View</string>
+						<string key="NSTitle">ViewType</string>
 						<string key="NSKeyEquiv"/>
 						<int key="NSKeyEquivModMask">1048576</int>
 						<int key="NSMnemonicLoc">2147483647</int>
@@ -1215,7 +1215,7 @@
 						<reference key="NSMixedImage" ref="502551668"/>
 						<string key="NSAction">submenuAction:</string>
 						<object class="NSMenu" key="NSSubmenu" id="466310130">
-							<string key="NSTitle">View</string>
+							<string key="NSTitle">ViewType</string>
 							<object class="NSMutableArray" key="NSMenuItems">
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="NSMenuItem" id="102151532">
@@ -2952,7 +2952,7 @@
 							<reference ref="422780221"/>
 						</object>
 						<reference key="parent" ref="972006081"/>
-						<string key="objectName">Content View</string>
+						<string key="objectName">Content ViewType</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">375</int>
