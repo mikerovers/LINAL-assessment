@@ -111,15 +111,32 @@ Matrix Matrix::ScalingMatrix(double xScalar, double yScalar, double zScalar)
 
 Matrix Matrix::RotationMatrix(int degree)
 {
-    auto m = Matrix{3, 3, 0.0};
+    auto m = Matrix{4, 4, 0.0};
 
     auto radial = toRadial(degree);
 
-    m(0, 0) = cos(radial);
-    m(0, 1) = -1 * sin(radial);
-    m(1, 0) = sin(radial);
+    m(0, 0) = 1;
     m(1, 1) = cos(radial);
-    m(2, 2) = 1;
+    m(1, 2) = -1 * sin(radial);
+    m(2, 1) = sin(radial);
+    m(2, 2) = cos(radial);
+    m(3, 3) = 1;
+
+    return m;
+}
+
+Matrix Matrix::YRotationMatrix(int degree)
+{
+    auto m = Matrix{4, 4, 0.0};
+
+    auto radial = toRadial(degree);
+
+    m(1, 1) = 1;
+    m(3, 3) = 1;
+    m(0, 0) = cos(radial);
+    m(0, 2) = sin(radial);
+    m(2, 0) = -1 * sin(radial);
+    m(2, 2) = cos(radial);
 
     return m;
 }
@@ -269,20 +286,32 @@ void Matrix::scale(double xValue, double yValue, double zValue)
 
 void Matrix::rotate(int amountInDegree)
 {
-    auto origin = getOrigin();
     auto r1 = Matrix::RotationMatrix(amountInDegree);
+    virtualRotate(r1);
+}
+
+void Matrix::virtualRotate(Matrix &rotationMatrix)
+{
+    auto origin = getOrigin();
     auto t1 = Matrix::TranslationMatrix(origin.getX(), origin.getY(), origin.getZ());
-    auto t2 = Matrix::TranslationMatrix(-1 * origin.getX(), -1 * origin.getY(), 0);
+    auto t2 = Matrix::TranslationMatrix(-1 * origin.getX(), -1 * origin.getY(), -1 * origin.getZ());
 
     for (coordindate i = 0; i < getColumns(); ++i) {
         auto vertex = Vector3D{matrix[0][i], matrix[1][i], matrix[2][i]};
-        t2 * vertex;
-        r1 * vertex;
-        t1 * vertex;
+        auto v1 = t2 * vertex;
+        auto v2 = rotationMatrix * v1;
+        auto v3 = t1 * v2;
 
-        matrix[0][i] = vertex.getX();
-        matrix[1][i] = vertex.getY();
+        matrix[0][i] = v3.getX();
+        matrix[1][i] = v3.getY();
+        matrix[2][i] = v3.getZ();
     }
+}
+
+void Matrix::rotateY(int amountInDegree)
+{
+    auto r1 = Matrix::YRotationMatrix(amountInDegree);
+    virtualRotate(r1);
 }
 
 Vector3D Matrix::get(unsigned int column) const
@@ -308,5 +337,49 @@ const Vector3D Matrix::getOrigin() const
 double Matrix::toRadial(int degree)
 {
     return degree * M_PI / 180;
+}
+
+void Matrix::rotateZ(int amountInDegree)
+{
+    auto r1 = Matrix::ZRotationMatrix(amountInDegree);
+    virtualRotate(r1);
+}
+
+Matrix Matrix::ZRotationMatrix(int degree)
+{
+    auto m = Matrix{4, 4, 0.0};
+
+    auto radial = toRadial(degree);
+
+    m(2, 2) = 1;
+    m(3, 3) = 1;
+    m(1, 1) = cos(radial);
+    m(1, 0) = sin(radial);
+    m(0, 1) = -1 * sin(radial);
+    m(0, 0) = cos(radial);
+
+    return m;
+}
+
+Matrix Matrix::XRotationMatrix(int degree)
+{
+    auto m = Matrix{4, 4, 0.0};
+
+    auto radial = toRadial(degree);
+
+    m(0, 0) = 1;
+    m(3, 3) = 1;
+    m(1, 1) = cos(radial);
+    m(2, 1) = sin(radial);
+    m(1, 2) = -1 * sin(radial);
+    m(2, 2) = cos(radial);
+
+    return m;
+}
+
+void Matrix::rotateX(int amountInDegree)
+{
+    auto r1 = Matrix::XRotationMatrix(amountInDegree);
+    virtualRotate(r1);
 }
 

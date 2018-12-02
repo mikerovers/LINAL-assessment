@@ -67,6 +67,32 @@ int main()
             m6.scale(0.999, 0.999, 0.999);
         }
 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
+        {
+            m6.rotate(1);
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::O)) {
+            m6.rotate(-1);
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y)) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+                m6.rotateY(-1);
+            } else {
+                m6.rotateY(1);
+            }
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+                m6.rotateZ(-1);
+            } else {
+                m6.rotateZ(1);
+            }
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+                m6.rotateX(-1);
+            } else {
+                m6.rotateX(1);
+            }
+        }
+
+
         window.clear();
         for(auto &view : views) {
             window.setView(view.getView());

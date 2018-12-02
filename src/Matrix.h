@@ -22,6 +22,9 @@ public:
     static Matrix TranslationMatrix(double xTranslation, double yTranslation, double zTranslation);
     static Matrix ScalingMatrix(double xScalar, double yScalar, double zScalar);
     static Matrix RotationMatrix(int degree);
+    static Matrix YRotationMatrix(int degree);
+    static Matrix ZRotationMatrix(int degree);
+    static Matrix XRotationMatrix(int degree);
     static Matrix Matrix2D(unsigned int columns);
     static Matrix Matrix3D(unsigned int columns);
     static Matrix FromModel(obj::Model model);
@@ -35,8 +38,11 @@ public:
 
     void scale(double xValue, double yValue, double zValue);
     void translate(double xValue, double yValue, double zValue);
-    void draw(sf::RenderWindow& window, const ViewType viewType) const;
+    void draw(sf::RenderWindow& window, ViewType viewType) const;
     void rotate(int amountInDegree);
+    void rotateY(int amountInDegree);
+    void rotateZ(int amountInDegree);
+    void rotateX(int amountInDegree);
 
     Vector3D get(unsigned int column) const;
     const Vector3D getOrigin() const;
@@ -51,6 +57,7 @@ protected:
     sf::Color color;
 
     static double toRadial(int degree);
+    void virtualRotate(Matrix& rotationMatrix);
 };
 
 
