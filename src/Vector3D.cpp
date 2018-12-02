@@ -51,3 +51,24 @@ Vector3D::Vector3D(double x, double y, double z) : x(x), y(y), z(z)
 {
 
 }
+
+void Vector3D::draw(sf::RenderWindow &window, const ViewType &viewType) const
+{
+    sf::CircleShape shape(5.f);
+
+    switch (viewType) {
+        case front:
+            shape.setPosition(static_cast<float>(getX()), static_cast<float>(getY()));
+            break;
+        case perspective:break;
+        case side:
+            shape.setPosition(static_cast<float>(getY()), static_cast<float>(getZ()));
+            break;
+        case top:
+            shape.setPosition(static_cast<float>(getX()), static_cast<float>(getZ()));
+            break;
+    }
+
+    shape.setFillColor(sf::Color::Blue);
+    window.draw(shape);
+}

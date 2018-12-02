@@ -171,8 +171,6 @@ Matrix Matrix::FromModel(obj::Model model)
         }
     }
 
-    m.print();
-
     return m;
 }
 
@@ -381,5 +379,64 @@ void Matrix::rotateX(int amountInDegree)
 {
     auto r1 = Matrix::XRotationMatrix(amountInDegree);
     virtualRotate(r1);
+}
+
+void Matrix::rotateAroundPoint(Vector3D &point, double amountInDegree)
+{
+    auto pointMatrix = Matrix{ 3, 1 };
+    pointMatrix(0, 0) = point.getX();
+    pointMatrix(1, 0) = point.getY();
+    pointMatrix(2, 0) = point.getZ();
+    double toXYInDegree = atan((point.getZ() / point.getY())) * 180.0 / M_PI;
+
+    auto r1 = Matrix::YRotationMatrix(static_cast<int>(toXYInDegree));
+    std::cout << "Rotation 1:" << std::endl;
+    r1.print();
+    std::cout << std::endl;
+
+
+    // Rotate to y axis.
+    auto v1 = Matrix::YRotationMatrix(static_cast<int>(toXYInDegree)) * point;
+    v1.setZ(0);
+
+    // Rotate to x axis.
+    auto slanted = v1.getY() / sqrt(pow(v1.getX(), 2) + pow(v1.getZ(), 2) + pow(v1.getY(), 2));
+    auto adjacent = (sqrt(pow(v1.getX(), 2) + pow(v1.getZ(), 2))) / sqrt(pow(v1.getX(), 2) + pow(v1.getZ(), 2) + pow(v1.getY(), 2));
+    double toXInDegree = acos(adjacent) * 180.0 / M_PI;
+    auto v2 = Matrix::XRotationMatrix(static_cast<int>(toXInDegree)) * v1;
+
+    auto r2 = Matrix::ZRotationMatrix(static_cast<int>(toXInDegree));
+    std::cout << "Rotation 2:" << std::endl;
+    r2.print();
+    std::cout << std::endl;
+
+    auto r3 = Matrix::XRotationMatrix(amountInDegree);
+    std::cout << "Rotation 3:" << std::endl;
+    r3.print();
+    std::cout << std::endl;
+
+    auto r4 = Matrix::ZRotationMatrix(static_cast<int>(-toXInDegree));
+    std::cout << "Rotation 4:" << std::endl;
+    r4.print();
+    std::cout << std::endl;
+
+    auto r5 = Matrix::YRotationMatrix(static_cast<int>(-toXYInDegree));
+    std::cout << "Rotation 5:" << std::endl;
+    r5.print();
+    std::cout << std::endl;
+
+    auto m1 = r5 * r4;
+    auto m2 = m1 * r3;
+    auto m3 = m2 * r2;
+    auto m4 = m3 * r1;
+
+    for (coordindate i = 0; i < getColumns(); ++i) {
+        auto vertex = Vector3D{matrix[0][i], matrix[1][i], matrix[2][i]};
+        auto nv = m4 * vertex;
+
+        matrix[0][i] = nv.getX();
+        matrix[1][i] = nv.getY();
+        matrix[2][i] = nv.getZ();
+    }
 }
 

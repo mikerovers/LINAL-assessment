@@ -43,6 +43,7 @@ public:
     void rotateY(int amountInDegree);
     void rotateZ(int amountInDegree);
     void rotateX(int amountInDegree);
+    void rotateAroundPoint(Vector3D &point, double amountInDegree);
 
     Vector3D get(unsigned int column) const;
     const Vector3D getOrigin() const;

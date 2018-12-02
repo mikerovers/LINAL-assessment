@@ -20,6 +20,7 @@ class CustomView
 public:
     CustomView(ViewType viewType, sf::FloatRect rect);
     sf::View& getView() { return *view; }
+    const ViewType getViewType() const { return viewType; }
 
     void draw(const sf::RenderWindow &window, ObjectContainer &objects);
 private:

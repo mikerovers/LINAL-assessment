@@ -2,6 +2,9 @@
 #define LINAL_ASSESSMENT_VECTOR3D_H
 
 
+#include <SFML/Graphics/RenderWindow.hpp>
+#include "CustomView.h"
+
 class Vector3D
 {
 public:
@@ -12,6 +15,8 @@ public:
     void print() const;
     double length() const;
     void normalize();
+
+    void draw(sf::RenderWindow& window, const ViewType& viewType) const;
 
     double getX() const { return x; }
     double getY() const { return y; };

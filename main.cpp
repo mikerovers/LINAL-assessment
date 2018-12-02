@@ -33,6 +33,8 @@ int main()
     views.emplace_back(side, sf::FloatRect(0.5f, 0.f, 0.5f, 0.5f));
     views.emplace_back(front, sf::FloatRect(0.f, 0.5f, 0.5f, 0.5f));
 
+    auto rotV = Vector3D{100, 8, 100};
+
     sf::Event event;
     while (window.isOpen()) {
         while(window.pollEvent(event)) {
@@ -92,11 +94,15 @@ int main()
             }
         }
 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
+            m6.rotateAroundPoint(rotV, 1);
+        }
 
         window.clear();
         for(auto &view : views) {
             window.setView(view.getView());
             view.draw(window, objects);
+            rotV.draw(window, view.getViewType());
         }
         window.display();
     }
