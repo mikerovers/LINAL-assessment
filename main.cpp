@@ -33,7 +33,7 @@ int main()
     views.emplace_back(side, sf::FloatRect(0.5f, 0.f, 0.5f, 0.5f));
     views.emplace_back(front, sf::FloatRect(0.f, 0.5f, 0.5f, 0.5f));
 
-    auto rotV = Vector3D{100, 8, 100};
+    auto rotV = Vector3D{10, 8, 6};
 
     sf::Event event;
     while (window.isOpen()) {

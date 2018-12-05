@@ -352,8 +352,8 @@ Matrix Matrix::ZRotationMatrix(int degree)
     m(2, 2) = 1;
     m(3, 3) = 1;
     m(1, 1) = cos(radial);
-    m(1, 0) = sin(radial);
-    m(0, 1) = -1 * sin(radial);
+    m(0, 1) = sin(radial);
+    m(1, 0) = -1 * sin(radial);
     m(0, 0) = cos(radial);
 
     return m;
@@ -387,13 +387,12 @@ void Matrix::rotateAroundPoint(Vector3D &point, double amountInDegree)
     pointMatrix(0, 0) = point.getX();
     pointMatrix(1, 0) = point.getY();
     pointMatrix(2, 0) = point.getZ();
-    double toXYInDegree = atan((point.getZ() / point.getY())) * 180.0 / M_PI;
+    double toXYInDegree = atan((point.getZ() / point.getX())) * 180.0 / M_PI;
 
     auto r1 = Matrix::YRotationMatrix(static_cast<int>(toXYInDegree));
     std::cout << "Rotation 1:" << std::endl;
     r1.print();
     std::cout << std::endl;
-
 
     // Rotate to y axis.
     auto v1 = Matrix::YRotationMatrix(static_cast<int>(toXYInDegree)) * point;
@@ -435,8 +434,8 @@ void Matrix::rotateAroundPoint(Vector3D &point, double amountInDegree)
         auto nv = m4 * vertex;
 
         matrix[0][i] = nv.getX();
-        matrix[1][i] = nv.getY();
         matrix[2][i] = nv.getZ();
+        matrix[1][i] = nv.getY();
     }
 }
 
