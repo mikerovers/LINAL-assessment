@@ -74,7 +74,7 @@ TEST_CASE("min & max of matrix", "[matrix]") {
     REQUIRE((int)(target.maxZ() * truncateAmount) / truncateAmount == 2.6033);
 }
 
-TEST_CASE("distance calcualtion", "[matrix]") {
+TEST_CASE("distance calculation", "[matrix]") {
     auto targetMesh = std::make_unique<MyMesh>("target.obj");
     auto target = GameObject::FromModel(targetMesh->getModel());
 

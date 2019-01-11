@@ -4,6 +4,7 @@
 #include "src/Matrix.h"
 #include "src/MyMesh.h"
 #include "src/CustomView.h"
+#include "src/PulseController.h"
 
 int main()
 {
@@ -21,6 +22,8 @@ int main()
     target.setColor(sf::Color::Yellow);
     target.scale(25, 25, 25);
     target.setCollisionShape(CollisionShape::SPHERE);
+
+    auto targetPulseController = std::make_unique<PulseController>(target, 30, 40, 0.01);
 
     window.setKeyRepeatEnabled(false);
 
@@ -99,9 +102,8 @@ int main()
             player.rotateAroundPoint(rotV, 1);
         }
 
-        if (player.intersect(target)) {
-            std::cout << "intersects" << std::endl;
-        }
+        targetPulseController->act();
+        std::cout << "Target radius:" << player.getRadius() << std::endl;
 
         window.clear();
         for(auto &view : views) {
