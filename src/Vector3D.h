@@ -15,6 +15,7 @@ public:
     void print() const;
     double length() const;
     void normalize();
+    double distance(const Vector3D &other) const;
 
     void draw(sf::RenderWindow& window, const ViewType& viewType) const;
 

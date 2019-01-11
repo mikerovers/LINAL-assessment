@@ -12,7 +12,8 @@ Matrix::Matrix(const Matrix &other)
     matrix = other.matrix;
 }
 
-Matrix::Matrix(unsigned int rows, unsigned int columns, double value, sf::Color color) : rows(rows), columns(columns), color(color)
+Matrix::Matrix(unsigned int rows, unsigned int columns, double value, sf::Color color, CollisionShape collisionShape)
+        : rows(rows), columns(columns), color(color), collisionShape(collisionShape)
 {
     matrix.resize(rows);
     for (auto i = 0; i < matrix.size(); ++i) {
@@ -443,4 +444,116 @@ void Matrix::setColor(const sf::Color &color)
 {
     Matrix::color = color;
 }
+
+bool Matrix::intersect(const Matrix &other) const
+{
+    if (collisionShape == CollisionShape::RECTANGLE && other.collisionShape == CollisionShape::RECTANGLE) {
+        // AABB - AABB
+        // Check if a box intersects another box.
+        return
+            (minX() <= other.maxX() && maxX() >= other.minX()) &&
+            (minY() <= other.maxY() && maxY() >= other.minY()) &&
+            (minZ() <= other.maxZ() && maxZ() >= other.minZ());
+    } else if (collisionShape == CollisionShape::RECTANGLE && other.collisionShape == CollisionShape::SPHERE) {
+        // AABB - Sphere
+        // Calculate the closest point to the sphere.
+        // After that, calculate if the distance between that point an the sphere is smaller or equal to the radius of the sphere.
+        auto origin = other.getOrigin();
+        auto x = std::max(minX(), std::min(origin.getX(), maxX()));
+        auto y = std::max(minY(), std::min(origin.getY(), maxY()));
+        auto z = std::max(minZ(), std::min(origin.getZ(), maxZ()));
+
+        auto distance = std::sqrt(
+                (x - origin.getX()) * (x - origin.getX()) +
+                (y - origin.getY()) * (y - origin.getY()) +
+                (z - origin.getZ()) * (z - origin.getZ()));
+
+        return distance < other.getRadius();
+    } else if (collisionShape == CollisionShape::SPHERE && other.collisionShape == CollisionShape::SPHERE) {
+        // Sphere - Sphere
+        // Calculate distance between two spheres.
+        // After that, test if the distance between he spheres is less or equal to the sum of both radii.
+        auto origin = getOrigin();
+        auto otherOrigin = other.getOrigin();
+        auto distance = std::sqrt(
+                (origin.getX() - otherOrigin.getX()) * (origin.getX() - otherOrigin.getX()) +
+                (origin.getY() - otherOrigin.getY()) * (origin.getY() - otherOrigin.getY())+
+                (origin.getZ() - otherOrigin.getZ()) * (origin.getZ() - otherOrigin.getZ()));
+
+        return distance < (getRadius() + other.getRadius());
+    }
+
+    return false;
+}
+
+double Matrix::maxX() const
+{
+    std::vector<double> xEn{};
+    for (int i = 0; i < columns; ++i) {
+        xEn.emplace_back(matrix[0][i]);
+    }
+
+    return *std::max_element(xEn.begin(), xEn.end());
+}
+
+double Matrix::minX() const
+{
+    std::vector<double> xEn{};
+    for (int i = 0; i < columns; ++i) {
+        xEn.emplace_back(matrix[0][i]);
+    }
+
+    return *std::min_element(xEn.begin(), xEn.end());
+}
+
+double Matrix::minY() const
+{
+    std::vector<double> yEn{};
+    for (int i = 0; i < columns; ++i) {
+        yEn.emplace_back(matrix[1][i]);
+    }
+
+    return *std::min_element(yEn.begin(), yEn.end());
+}
+
+double Matrix::maxY() const
+{
+    std::vector<double> yEn{};
+    for (int i = 0; i < columns; ++i) {
+        yEn.emplace_back(matrix[1][i]);
+    }
+
+    return *std::max_element(yEn.begin(), yEn.end());
+}
+
+double Matrix::minZ() const
+{
+    std::vector<double> zEn{};
+    for (int i = 0; i < columns; ++i) {
+        zEn.emplace_back(matrix[2][i]);
+    }
+
+    return *std::min_element(zEn.begin(), zEn.end());
+}
+
+double Matrix::maxZ() const
+{
+    std::vector<double> zEn{};
+    for (int i = 0; i < columns; ++i) {
+        zEn.emplace_back(matrix[2][i]);
+    }
+
+    return *std::max_element(zEn.begin(), zEn.end());
+}
+
+double Matrix::getRadius() const
+{
+    return getOrigin().distance(get(0));
+}
+
+void Matrix::setCollisionShape(CollisionShape collisionShape)
+{
+    Matrix::collisionShape = collisionShape;
+}
+
 

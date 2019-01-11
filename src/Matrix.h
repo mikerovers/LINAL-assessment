@@ -11,11 +11,17 @@
 
 typedef unsigned int coordindate;
 
+enum CollisionShape {
+    RECTANGLE,
+    SPHERE
+};
+
 class Matrix
 {
 public:
     Matrix(const Matrix &other);
-    Matrix(unsigned int rows, unsigned int columns, double value = 0.0, sf::Color color = sf::Color::Red);
+    Matrix(unsigned int rows, unsigned int columns, double value = 0.0, sf::Color color = sf::Color::Red,
+               CollisionShape collisionShape = CollisionShape::RECTANGLE);
 
     static Matrix NullMatrix(unsigned int rows, unsigned int columns);
     static Matrix UnitMatrix(unsigned int size);
@@ -52,6 +58,18 @@ public:
 
     std::vector<sf::Vertex> getSFVertices() const;
     void setColor(const sf::Color &color);
+    double maxX() const;
+    double minX() const;
+    double minY() const;
+    double maxY() const;
+    double minZ() const;
+    double maxZ() const;
+
+    CollisionShape getCollisionShape() const
+    { return collisionShape; };
+    double getRadius() const;
+    void setCollisionShape(CollisionShape collisionShape);
+    bool intersect(const Matrix &other) const;
 protected:
     unsigned int rows;
     unsigned int columns;
@@ -60,6 +78,7 @@ protected:
 
     static double toRadial(int degree);
     void virtualRotate(Matrix& rotationMatrix);
+    CollisionShape collisionShape;
 };
 
 

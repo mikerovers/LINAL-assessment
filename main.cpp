@@ -14,11 +14,13 @@ int main()
     auto playerMesh = std::make_unique<MyMesh>("cube.obj");
     auto player = GameObject::FromModel(playerMesh->getModel());
     player.scale(25, 25, 25);
+    player.setCollisionShape(CollisionShape::SPHERE);
 
     auto targetMesh = std::make_unique<MyMesh>("target.obj");
     auto target = GameObject::FromModel(targetMesh->getModel());
     target.setColor(sf::Color::Yellow);
     target.scale(25, 25, 25);
+    target.setCollisionShape(CollisionShape::SPHERE);
 
     window.setKeyRepeatEnabled(false);
 
@@ -95,6 +97,10 @@ int main()
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
             player.rotateAroundPoint(rotV, 1);
+        }
+
+        if (player.intersect(target)) {
+            std::cout << "intersects" << std::endl;
         }
 
         window.clear();

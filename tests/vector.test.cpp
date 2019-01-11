@@ -1,5 +1,6 @@
 #include <catch.hpp>
 #include "../src/Vector2D.h"
+#include "../src/Vector3D.h"
 
 TEST_CASE("basic vector math", "[vector]") {
     GIVEN("a default vector") {
@@ -53,4 +54,11 @@ TEST_CASE("basic vector math", "[vector]") {
         REQUIRE(v7 != v8);
         REQUIRE(v7 == v9);
     }
+}
+
+TEST_CASE("vector3d tests", "[vector3d]") {
+    Vector3D v10(1, 0, 5);
+    Vector3D v11(0, 2, 4);
+
+    REQUIRE(v10.distance(v11) == std::sqrt(6));
 }

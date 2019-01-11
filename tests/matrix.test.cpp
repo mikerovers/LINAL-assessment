@@ -1,6 +1,7 @@
 #include <catch.hpp>
 #include "../src/Vector2D.h"
 #include "../src/Matrix.h"
+#include "../src/MyMesh.h"
 
 TEST_CASE("basic matrix math", "[matrix]") {
     GIVEN("default") {
@@ -20,7 +21,7 @@ TEST_CASE("basic matrix math", "[matrix]") {
         REQUIRE(t(1, 3) == 3);
         REQUIRE(t(2, 3) == 4);
 
-        auto m = Matrix(4, 4, 0);
+        auto m = Matrix(4, 4, 0, sf::Color());
         m(0, 0) = 5;
         m(1, 0) = 3;
         m(2, 0) = 2;
@@ -56,4 +57,26 @@ TEST_CASE("basic matrix math", "[matrix]") {
         REQUIRE(m2(2, 3) == 7);
         REQUIRE(m2(3, 3) == 1);
     }
+}
+
+TEST_CASE("min & max of matrix", "[matrix]") {
+    auto targetMesh = std::make_unique<MyMesh>("cube.obj");
+    auto target = GameObject::FromModel(targetMesh->getModel());
+    auto truncateAmount = 10000.0;
+
+    REQUIRE((int)(target.minX() * truncateAmount) / truncateAmount == -6.8532);
+    REQUIRE((int)(target.maxX() * truncateAmount) / truncateAmount == 6.8532);
+
+    REQUIRE((int)(target.minY() * truncateAmount) / truncateAmount == -0.5077);
+    REQUIRE((int)(target.maxY() * truncateAmount) / truncateAmount == 0.5077);
+
+    REQUIRE((int)(target.minZ() * truncateAmount) / truncateAmount == -2.6033);
+    REQUIRE((int)(target.maxZ() * truncateAmount) / truncateAmount == 2.6033);
+}
+
+TEST_CASE("distance calcualtion", "[matrix]") {
+    auto targetMesh = std::make_unique<MyMesh>("target.obj");
+    auto target = GameObject::FromModel(targetMesh->getModel());
+
+    REQUIRE(target.getRadius() == 1.0);
 }

@@ -72,3 +72,8 @@ void Vector3D::draw(sf::RenderWindow &window, const ViewType &viewType) const
     shape.setFillColor(sf::Color::Blue);
     window.draw(shape);
 }
+
+double Vector3D::distance(const Vector3D &other) const
+{
+    return std::sqrt(std::pow(getX() - other.getX(), 2) + std::pow(getY() - other.getY(), 2) + std::pow(getZ() - other.getZ(), 2));
+}
