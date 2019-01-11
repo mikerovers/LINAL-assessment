@@ -6,9 +6,9 @@ CustomView::CustomView(const ViewType viewType, const sf::FloatRect rect) : view
     view->setViewport(rect);
 }
 
-void CustomView::draw(const sf::RenderWindow &window, ObjectContainer &objects)
+void CustomView::draw(sf::RenderWindow &window, ObjectContainer &objects)
 {
-    for (auto object : objects) {
-        object->draw(const_cast<sf::RenderWindow &>(window), viewType);
+    for (auto& object : objects) {
+        object->draw(window, viewType);
     }
 }

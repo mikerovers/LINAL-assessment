@@ -439,3 +439,8 @@ void Matrix::rotateAroundPoint(Vector3D &point, double amountInDegree)
     }
 }
 
+void Matrix::setColor(const sf::Color &color)
+{
+    Matrix::color = color;
+}
+

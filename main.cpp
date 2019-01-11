@@ -11,23 +11,22 @@ int main()
     settings.antialiasingLevel = 0;
     sf::RenderWindow window(sf::VideoMode(800, 600), "Lineaire dingen", sf::Style::Default, settings);
 
-    auto t1 = Matrix::TranslationMatrix(4, 3, 0);
-    auto t2 = Matrix::TranslationMatrix(-4, -3, 0);
-    auto s1 = Matrix::ScalingMatrix(2, 2, 0);
+    auto playerMesh = std::make_unique<MyMesh>("cube.obj");
+    auto player = GameObject::FromModel(playerMesh->getModel());
+    player.scale(25, 25, 25);
 
-    auto res = t1 * s1 * t2;
-
-    auto mesh = std::make_unique<MyMesh>();
-    mesh->load("cube.obj");
-    auto m6 = Matrix::FromModel(*mesh->model);
-    m6.scale(50, 50, 50);
+    auto targetMesh = std::make_unique<MyMesh>("target.obj");
+    auto target = GameObject::FromModel(targetMesh->getModel());
+    target.setColor(sf::Color::Yellow);
+    target.scale(25, 25, 25);
 
     window.setKeyRepeatEnabled(false);
 
     std::vector<CustomView> views;
     ObjectContainer objects;
 
-    objects.emplace_back(&m6);
+    objects.emplace_back(&player);
+    objects.emplace_back(&target);
 
     views.emplace_back(top, sf::FloatRect(0.f, 0.f, 0.5f, 0.5f));
     views.emplace_back(side, sf::FloatRect(0.5f, 0.f, 0.5f, 0.5f));
@@ -49,53 +48,53 @@ int main()
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
         {
-            m6.translate(-1, 0, 0);
+            player.translate(-1, 0, 0);
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
         {
-            m6.translate(1, 0, 0);
+            player.translate(1, 0, 0);
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
         {
-            m6.translate(0, -1, 0);
+            player.translate(0, -1, 0);
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
         {
-            m6.translate(0, 1, 0);
+            player.translate(0, 1, 0);
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
         {
-            m6.scale(1.001, 1.001, 1.001);
+            player.scale(1.001, 1.001, 1.001);
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
         {
-            m6.scale(0.999, 0.999, 0.999);
+            player.scale(0.999, 0.999, 0.999);
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
         {
-            m6.rotate(1);
+            player.rotate(1);
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::O)) {
-            m6.rotate(-1);
+            player.rotate(-1);
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y)) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-                m6.rotateY(-1);
+                player.rotateY(-1);
             } else {
-                m6.rotateY(1);
+                player.rotateY(1);
             }
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-                m6.rotateZ(-1);
+                player.rotateZ(-1);
             } else {
-                m6.rotateZ(1);
+                player.rotateZ(1);
             }
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-                m6.rotateX(-1);
+                player.rotateX(-1);
             } else {
-                m6.rotateX(1);
+                player.rotateX(1);
             }
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
-            m6.rotateAroundPoint(rotV, 1);
+            player.rotateAroundPoint(rotV, 1);
         }
 
         window.clear();

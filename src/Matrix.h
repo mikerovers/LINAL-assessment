@@ -51,6 +51,7 @@ public:
     unsigned int getColumns() const;
 
     std::vector<sf::Vertex> getSFVertices() const;
+    void setColor(const sf::Color &color);
 protected:
     unsigned int rows;
     unsigned int columns;

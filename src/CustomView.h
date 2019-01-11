@@ -12,8 +12,8 @@ enum ViewType {
     top
 };
 
+typedef Matrix GameObject;
 typedef std::vector<Matrix*> ObjectContainer;
-extern ViewType ViewTypeE;
 
 class CustomView
 {
@@ -22,7 +22,7 @@ public:
     sf::View& getView() { return *view; }
     const ViewType getViewType() const { return viewType; }
 
-    void draw(const sf::RenderWindow &window, ObjectContainer &objects);
+    void draw(sf::RenderWindow &window, ObjectContainer &objects);
 private:
     ViewType viewType;
     std::unique_ptr<sf::View> view;

@@ -1,0 +1,12 @@
+#ifndef LINAL_ASSESSMENT_PULSECONTROLLER_H
+#define LINAL_ASSESSMENT_PULSECONTROLLER_H
+
+
+class PulseController
+{
+public:
+private:
+};
+
+
+#endif //LINAL_ASSESSMENT_PULSECONTROLLER_H

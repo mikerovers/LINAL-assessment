@@ -7,7 +7,10 @@
 class MyMesh
 {
 public:
-    void load(std::string fileName);
+    explicit MyMesh(std::string fileName);
+    obj::Model &getModel()
+    { return *model; }
+private:
     std::unique_ptr<obj::Model> model;
 };
 
