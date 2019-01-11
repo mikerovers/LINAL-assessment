@@ -11,7 +11,7 @@ int main()
     settings.antialiasingLevel = 0;
     sf::RenderWindow window(sf::VideoMode(800, 600), "Lineaire dingen", sf::Style::Default, settings);
 
-    auto playerMesh = std::make_unique<MyMesh>("cube.obj");
+    auto playerMesh = std::make_unique<MyMesh>("player.obj");
     auto player = GameObject::FromModel(playerMesh->getModel());
     player.scale(25, 25, 25);
     player.setCollisionShape(CollisionShape::SPHERE);
