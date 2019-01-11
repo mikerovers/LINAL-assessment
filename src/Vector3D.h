@@ -12,6 +12,9 @@ public:
     Vector3D&operator+(const Vector3D &other);
     Vector3D&operator-(const Vector3D &other);
     Vector3D&operator*(int scalar);
+    Vector3D crossProduct(const Vector3D &other) const;
+    double inProduct(const Vector3D &other) const;
+    double angle(const Vector3D &other) const;
     void print() const;
     double length() const;
     void normalize();
