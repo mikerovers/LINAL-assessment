@@ -1,10 +1,10 @@
 #pragma once
-#include "src/Matrix.h"
+#include "Matrix.h"
 class Target :
 	public Matrix
 {
 public:
-	Target(const Matrix &other);
+	explicit Target(const Matrix &other);
 	~Target();
 };
 

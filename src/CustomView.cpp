@@ -12,3 +12,9 @@ void CustomView::draw(sf::RenderWindow &window, ObjectContainer &objects)
         object->draw(window, viewType);
     }
 }
+
+
+void CustomView::drawText(sf::RenderWindow & window, sf::Text text)
+{
+    window.draw(text);
+}

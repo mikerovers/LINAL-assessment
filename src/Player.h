@@ -1,10 +1,11 @@
 #pragma once
-#include "src/Matrix.h"
+#include "Matrix.h"
+
 class Player :
 	public Matrix
 {
 public:
-	Player(const Matrix &other);
+	explicit Player(const Matrix &other);
 	~Player();
 };
 

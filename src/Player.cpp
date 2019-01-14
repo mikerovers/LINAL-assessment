@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(const Matrix & other)
+Player::Player(const Matrix & other): Matrix(other)
 {
 	rows = other.rows;
 	columns = other.columns;

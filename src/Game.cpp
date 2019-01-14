@@ -1,17 +1,26 @@
 #include "Game.h"
 
+Game::Game()
+{
+}
+
+Game::~Game()
+{
+}
+
 void Game::start()
 {
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 0;
 	window = std::make_unique<sf::RenderWindow>(sf::VideoMode(800, 600), "Lineaire dingen", sf::Style::Default, settings);
-
-	auto& player = createPlayer();
-	auto& target = createTarget();
+	window->setKeyRepeatEnabled(false);
+	createPlayer();
+	createTarget();
+	targetPulseController = std::make_unique<PulseController>(*target, 30, 40, 0.005);
 
 	createViews();
-	
-	
+
+
 	sf::Font font;
 	if (!font.loadFromFile("ARIALI.TTF"))
 	{
@@ -27,11 +36,11 @@ void Game::start()
 	while (running && window->isOpen()) {
 		while (window->pollEvent(event)) {
 			switch (event.type) {
-			case sf::Event::Closed:
-				window->close();
-				break;
-			default:
-				break;
+				case sf::Event::Closed:
+					window->close();
+					break;
+				default:
+					break;
 			}
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
@@ -43,68 +52,68 @@ void Game::start()
 		if (!lost) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 			{
-				player.translate(-1, 0, 0);
+				player->translate(-1, 0, 0);
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 			{
-				player.translate(1, 0, 0);
+				player->translate(1, 0, 0);
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 			{
-				player.translate(0, -1, 0);
+				player->translate(0, -1, 0);
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 			{
-				player.translate(0, 1, 0);
+				player->translate(0, 1, 0);
 			}
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
 			{
-				player.scale(1.001, 1.001, 1.001);
+				player->scale(1.001, 1.001, 1.001);
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
 			{
-				player.scale(0.999, 0.999, 0.999);
+				player->scale(0.999, 0.999, 0.999);
 			}
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
 			{
-				player.rotate(1);
+				player->rotate(1);
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::O)) {
-				player.rotate(-1);
+				player->rotate(-1);
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y)) {
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-					player.rotateY(-1);
+					player->rotateY(-1);
 				}
 				else {
-					player.rotateY(1);
+					player->rotateY(1);
 				}
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-					player.rotateZ(-1);
+					player->rotateZ(-1);
 				}
 				else {
-					player.rotateZ(1);
+					player->rotateZ(1);
 				}
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-					player.rotateX(-1);
+					player->rotateX(-1);
 				}
 				else {
-					player.rotateX(1);
+					player->rotateX(1);
 				}
 			}
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
-				player.rotateAroundPoint(rotV, 1);
+				player->rotateAroundPoint(rotV, 1);
 			}
 
 
-			if (player.intersect(target)) {
+			if (player->intersect(*target)) {
 				lost = true;
 				objects.erase(objects.begin() + 0);
 			}
@@ -121,29 +130,26 @@ void Game::start()
 
 }
 
-Player& Game::createPlayer()
+void Game::createPlayer()
 {
 	auto playerMesh = std::make_unique<MyMesh>("player.obj");
-	auto player = std::make_shared<Player>(GameObject::FromModel(playerMesh->getModel()));
-	player->setColor(sf::Color::Green);
+	player = std::make_shared<Player>(GameObject::FromModel(playerMesh->getModel()));
+	player->setColor(sf::Color::Red);
 	player->scale(25, 25, 25);
 	player->setCollisionShape(CollisionShape::SPHERE);
 	player->translate(-150, 0, 0);
 
 	objects.emplace_back(player);
-
-	return *player;
 }
 
-Target& Game::createTarget()
+void Game::createTarget()
 {
 	auto targetMesh = std::make_unique<MyMesh>("target.obj");
-	auto target = std::make_shared<Target>(GameObject::FromModel(targetMesh->getModel()));
+	target = std::make_shared<Target>(GameObject::FromModel(targetMesh->getModel()));
 	target->setColor(sf::Color::Yellow);
 	target->scale(25, 25, 25);
 	target->setCollisionShape(CollisionShape::SPHERE);
 	objects.emplace_back(target);
-	return *target;
 }
 
 void Game::createViews()
@@ -155,14 +161,29 @@ void Game::createViews()
 
 void Game::reDraw()
 {
-	auto rotV = Vector3D{ 10, 8, 6 };
+	auto end = pointToShootFrom += shootDirection;
+
 	window->clear();
 	for (auto &view : views) {
 		window->setView(view.getView());
 		view.draw(*window, objects);
 		view.drawText(*window, *text);
-		rotV.draw(*window, view.getViewType());
+		shootDirection.draw(*window, view.getViewType());
+		pointToShootFrom.draw(*window, view.getViewType());
+		pointToShootFrom.draw(*window, view.getViewType(), end);
+		//end.draw(window, view.getViewType());
 	}
 
 	window->display();
+}
+
+void Game::update()
+{
+	pointToShootFrom = player->get(4);
+	shootDirection = player->get(6).crossProduct(player->get(5));
+	shootDirection.normalize();
+	shootDirection * 100;
+
+	targetPulseController->act();
+	Game::reDraw();
 }
