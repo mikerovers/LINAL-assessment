@@ -21,7 +21,7 @@ class Matrix
 public:
     Matrix(const Matrix &other);
     Matrix(unsigned int rows, unsigned int columns, double value = 0.0, sf::Color color = sf::Color::Red,
-               CollisionShape collisionShape = CollisionShape::RECTANGLE);
+           CollisionShape collisionShape = CollisionShape::RECTANGLE);
 
     static Matrix NullMatrix(unsigned int rows, unsigned int columns);
     static Matrix UnitMatrix(unsigned int size);
@@ -70,10 +70,11 @@ public:
     double getRadius() const;
     void setCollisionShape(CollisionShape collisionShape);
     bool intersect(const Matrix &other) const;
-protected:
     unsigned int rows;
     unsigned int columns;
     std::vector<std::vector<double>> matrix;
+protected:
+
     sf::Color color;
 
     static double toRadial(int degree);

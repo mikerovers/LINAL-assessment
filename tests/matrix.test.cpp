@@ -39,6 +39,10 @@ TEST_CASE("basic matrix math", "[matrix]") {
         m(2, 3) = 3;
         m(3, 3) = 1;
 
+        REQUIRE(m.get(0).getX() == 5);
+        REQUIRE(m.get(0).getY() == 3);
+        REQUIRE(m.get(0).getZ() == 2);
+
         auto m2 = t * m;
         REQUIRE(m2(0, 0) == 87);
         REQUIRE(m2(1, 0) == 126);
