@@ -106,7 +106,7 @@ int main()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
             player.rotateAroundPoint(rotV, 1);
         }
-
+			
         targetPulseController->act();
 
 //        pointToShootFrom = getMiddle(player.get(5), player.get(0));
