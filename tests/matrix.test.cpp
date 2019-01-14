@@ -80,3 +80,37 @@ TEST_CASE("distance calculation", "[matrix]") {
 
     REQUIRE(target.getRadius() == 1.0);
 }
+
+TEST_CASE("matrix * matrix", "[matrix]") {
+    Matrix m1{2, 2};
+    m1(0, 0) = 1;
+    m1(1, 0) = 3;
+    m1(0, 1) = 2;
+    m1(1, 1) = 4;
+
+    Matrix m2{2, 2};
+    m2(0, 0) = 5;
+    m2(1, 0) = 6;
+    m2(0, 1) = 7;
+    m2(1, 1) = 8;
+
+    Matrix m3 = m1 * m2;
+    REQUIRE(m3(0, 0) == 17);
+    REQUIRE(m3(1, 0) == 39);
+    REQUIRE(m3(0, 1) == 23);
+    REQUIRE(m3(1, 1) == 53);
+
+    Matrix m4{2, 2};
+    m4(0, 0) = 1;
+    m4(1, 0) = 3;
+    m4(0, 1) = 2;
+    m4(1, 1) = 4;
+
+    Matrix m5{2, 1};
+    m5(0, 0) = 5;
+    m5(1, 0) = 6;
+
+    Matrix m6 = m4 * m5;
+    REQUIRE(m6(0, 0) == 17);
+    REQUIRE(m6(1, 0) == 39);
+}
