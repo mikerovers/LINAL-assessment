@@ -2,12 +2,16 @@
 #include <iostream>
 #include "Vector3D.h"
 
-void Vector3D::normalize()
+Vector3D Vector3D::normalize()
 {
+    Vector3D m{};
+
     auto length = this->length();
-    x = x / length;
-    y = y / length;
-    z = z / length;
+    m.setX(x / length);
+    m.setY(y / length);
+    m.setZ(z / length);
+
+    return m;
 }
 
 double Vector3D::length() const
@@ -62,7 +66,7 @@ void Vector3D::draw(sf::RenderWindow &window, const ViewType &viewType) const
             break;
         case perspective:break;
         case side:
-            shape.setPosition(static_cast<float>(getY()), static_cast<float>(getZ()));
+            shape.setPosition(static_cast<float>(getZ()), static_cast<float>(getY()));
             break;
         case top:
             shape.setPosition(static_cast<float>(getX()), static_cast<float>(getZ()));
@@ -72,6 +76,30 @@ void Vector3D::draw(sf::RenderWindow &window, const ViewType &viewType) const
     shape.setFillColor(sf::Color::Blue);
     window.draw(shape);
 }
+
+
+void Vector3D::draw(sf::RenderWindow &window, const ViewType &viewType, const Vector3D &other) const
+{
+    sf::Vertex line[2];
+    switch (viewType) {
+        case front:
+            line[0] = sf::Vertex(sf::Vector2f(static_cast<float>(getX()), static_cast<float>(getY())));
+            line[1] = sf::Vertex(sf::Vector2f(static_cast<float>(other.getX()), static_cast<float>(other.getY())));
+            break;
+        case perspective:break;
+        case side:
+            line[0] = sf::Vertex(sf::Vector2f(static_cast<float>(getZ()), static_cast<float>(getY())));
+            line[1] = sf::Vertex(sf::Vector2f(static_cast<float>(other.getZ()), static_cast<float>(other.getY())));
+            break;
+        case top:
+            line[0] = sf::Vertex(sf::Vector2f(static_cast<float>(getX()), static_cast<float>(getZ())));
+            line[1] = sf::Vertex(sf::Vector2f(static_cast<float>(other.getX()), static_cast<float>(other.getZ())));
+            break;
+    }
+
+    window.draw(line, 2, sf::Lines);
+}
+
 
 double Vector3D::distance(const Vector3D &other) const
 {
@@ -97,4 +125,26 @@ double Vector3D::inProduct(const Vector3D &other) const
 double Vector3D::angle(const Vector3D &other) const
 {
     return (inProduct(other)) / (length() * other.length()) * 180 / M_PI;
+}
+
+Vector3D Vector3D::operator+=(const Vector3D &other) const
+{
+    Vector3D m{};
+
+    m.setX(x + other.getX());
+    m.setY(y + other.getY());
+    m.setZ(z + other.getZ());
+
+    return m;
+}
+
+Vector3D Vector3D::operator*=(int scalar) const
+{
+    Vector3D m{};
+
+    m.setX(x * scalar);
+    m.setY(y *scalar);
+    m.setZ(z *scalar);
+
+    return m;
 }

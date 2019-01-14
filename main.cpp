@@ -5,6 +5,7 @@
 #include "src/MyMesh.h"
 #include "src/CustomView.h"
 #include "src/PulseController.h"
+#include "src/vmath.h"
 
 int main()
 {
@@ -14,8 +15,8 @@ int main()
 
     auto playerMesh = std::make_unique<MyMesh>("player.obj");
     auto player = GameObject::FromModel(playerMesh->getModel());
-    player.scale(25, 25, 25);
     player.setCollisionShape(CollisionShape::SPHERE);
+    player.scale(25, 25, 25);
 
     auto targetMesh = std::make_unique<MyMesh>("target.obj");
     auto target = GameObject::FromModel(targetMesh->getModel());
@@ -23,7 +24,7 @@ int main()
     target.scale(25, 25, 25);
     target.setCollisionShape(CollisionShape::SPHERE);
 
-    auto targetPulseController = std::make_unique<PulseController>(target, 30, 40, 0.01);
+    auto targetPulseController = std::make_unique<PulseController>(target, 30, 40, 0.005);
 
     window.setKeyRepeatEnabled(false);
 
@@ -38,6 +39,10 @@ int main()
     views.emplace_back(front, sf::FloatRect(0.f, 0.5f, 0.5f, 0.5f));
 
     auto rotV = Vector3D{10, 8, 6};
+    Vector3D zero{ 0, 0, 0 };
+
+    player.print();
+    Vector3D pointToShootFrom{};
 
     sf::Event event;
     while (window.isOpen()) {
@@ -103,13 +108,27 @@ int main()
         }
 
         targetPulseController->act();
-        std::cout << "Target radius:" << player.getRadius() << std::endl;
+
+//        pointToShootFrom = getMiddle(player.get(5), player.get(0));
+        pointToShootFrom = player.get(4);
+        auto shootDirection = player.get(6).crossProduct(player.get(5));
+        shootDirection.normalize();
+        shootDirection * 100;
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::G)) {
+
+        }
+
+        auto end = pointToShootFrom += shootDirection;
 
         window.clear();
         for(auto &view : views) {
             window.setView(view.getView());
             view.draw(window, objects);
-            rotV.draw(window, view.getViewType());
+            shootDirection.draw(window, view.getViewType());
+            pointToShootFrom.draw(window, view.getViewType());
+            pointToShootFrom.draw(window, view.getViewType(), end);
+            end.draw(window, view.getViewType());
         }
         window.display();
     }

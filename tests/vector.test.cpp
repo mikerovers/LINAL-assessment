@@ -44,10 +44,10 @@ TEST_CASE("basic vector math", "[vector3d]") {
     Vector3D v7(3, 4, 0);
 
     REQUIRE(v7.length() == 5);
-    v7.normalize();
-    REQUIRE(v7.getX() == 0.6);
-    REQUIRE(v7.getY() == 0.8);
-    REQUIRE(v7.length() == 1);
+    auto v8 = v7.normalize();
+    REQUIRE(v8.getX() == 0.6);
+    REQUIRE(v8.getY() == 0.8);
+    REQUIRE(v8.length() == 1);
 }
 
 TEST_CASE("advanced vector tests", "[vector3d]") {
@@ -87,4 +87,13 @@ TEST_CASE("advanced vector tests", "[vector3d]") {
     Vector3D v13{3, 2, 0};
 
     REQUIRE(std::round(v12.angle(v13)) == 50);
+
+    // Another cross product
+    Vector3D v14{77, 2, -11};
+    Vector3D v15{77, -7, 11};
+
+    auto v16 = v14.crossProduct(v15);
+    REQUIRE(v16.getX() == -55);
+    REQUIRE(v16.getY() == -1694);
+    REQUIRE(v16.getZ() == -693);
 }
