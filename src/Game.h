@@ -22,6 +22,7 @@ public:
 
 private:
 	bool running = true;
+	bool drawHelp = true;
 	std::shared_ptr<Player> player;
 	std::shared_ptr<Target> target;
 	std::shared_ptr<sf::RenderWindow> window;
@@ -31,5 +32,8 @@ private:
 	std::vector<CustomView> views;
 	Vector3D pointToShootFrom{};
 	Vector3D shootDirection{};
+    Vector3D playerPositionBackup{};
 	std::unique_ptr<PulseController> targetPulseController;
+
+	Vector3D crossV;
 };
