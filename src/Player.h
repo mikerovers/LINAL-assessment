@@ -6,6 +6,8 @@ class Player :
 {
 public:
 	explicit Player(const Matrix &other);
-	~Player();
+	explicit Player(unsigned int columns);
+	~Player() = default;
+	void act() override;
 };
 

@@ -64,6 +64,7 @@ public:
     double maxY() const;
     double minZ() const;
     double maxZ() const;
+    void addVector(int position, double x, double y, double z);
 
     CollisionShape getCollisionShape() const
     { return collisionShape; };
@@ -73,6 +74,7 @@ public:
     unsigned int rows;
     unsigned int columns;
     std::vector<std::vector<double>> matrix;
+    virtual void act() {}
 protected:
 
     sf::Color color;

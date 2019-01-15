@@ -6,6 +6,7 @@
 #include "PulseController.h"
 #include "Player.h"
 #include "Target.h"
+#include "Bullet.h"
 
 class Game
 {
@@ -26,6 +27,7 @@ private:
 	std::shared_ptr<sf::RenderWindow> window;
 	std::shared_ptr<sf::Text> text;
 	ObjectContainer objects;
+	std::vector<std::shared_ptr<Bullet>> bullets;
 	std::vector<CustomView> views;
 	Vector3D pointToShootFrom{};
 	Vector3D shootDirection{};

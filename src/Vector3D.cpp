@@ -148,3 +148,12 @@ Vector3D Vector3D::operator*=(int scalar) const
 
     return m;
 }
+
+Vector3D &Vector3D::mirror(const Vector3D &other)
+{
+    x = 2 * other.getX() - getX();
+    y = 2 * other.getY() - getY();
+    z = 2 * other.getZ() - getZ();
+
+    return *this;
+}

@@ -13,7 +13,7 @@ enum ViewType {
 };
 
 typedef Matrix GameObject;
-typedef std::vector<std::shared_ptr<Matrix>> ObjectContainer;
+typedef std::vector<std::shared_ptr<Matrix>> ObjectContainer;;
 
 class CustomView
 {

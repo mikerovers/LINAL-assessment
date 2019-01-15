@@ -21,6 +21,7 @@ public:
     double length() const;
     Vector3D normalize();
     double distance(const Vector3D &other) const;
+    Vector3D& mirror(const Vector3D &other);
 
     void draw(sf::RenderWindow& window, const ViewType& viewType) const;
     void draw(sf::RenderWindow& window, const ViewType &viewType, const Vector3D &other) const;

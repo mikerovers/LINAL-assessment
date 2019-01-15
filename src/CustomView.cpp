@@ -1,5 +1,6 @@
 #include "CustomView.h"
 #include "Matrix.h"
+#include "Bullet.h"
 
 CustomView::CustomView(const ViewType viewType, const sf::FloatRect rect) : viewType(viewType), view(std::make_unique<sf::View>(sf::Vector2f(0, 0), sf::Vector2f(800.f, 600.f)))
 {
@@ -12,7 +13,6 @@ void CustomView::draw(sf::RenderWindow &window, ObjectContainer &objects)
         object->draw(window, viewType);
     }
 }
-
 
 void CustomView::drawText(sf::RenderWindow & window, sf::Text text)
 {
