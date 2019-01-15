@@ -76,11 +76,11 @@ void Game::start()
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 			{
-				player->rotateY(5);
+				player->rotateY(1);
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 			{
-				player->rotateY(-5);
+				player->rotateY(-1);
 			}
 
 
@@ -184,7 +184,7 @@ void Game::createPlayer()
 	player = std::make_shared<Player>(GameObject::FromModel(playerMesh->getModel()));
 	player->setColor(sf::Color::Red);
 	player->scale(25, 25, 25);
-	player->setCollisionShape(CollisionShape::RECTANGLE);
+	player->setCollisionShape(CollisionShape::RECTANGLE	);
 
 	objects.emplace_back(player);
 }
