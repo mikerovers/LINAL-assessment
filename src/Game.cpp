@@ -9,10 +9,6 @@ Game::Game()
 	targetMesh = std::make_unique<MyMesh>("target.obj");
 }
 
-Game::~Game()
-{
-}
-
 void Game::start()
 {
 	sf::ContextSettings settings;

@@ -12,7 +12,7 @@ class Game
 {
 public:
 	Game();
-	~Game();
+	~Game() = default;
 	void start();
 	void createPlayer();
 	void createTarget();
