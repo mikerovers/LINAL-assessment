@@ -39,6 +39,9 @@ TEST_CASE("basic matrix math", "[matrix]") {
         m(2, 3) = 3;
         m(3, 3) = 1;
 
+        REQUIRE(m.getColumns() == 4);
+        REQUIRE(m.getRows() == 4);
+
         REQUIRE(m.get(0).getX() == 5);
         REQUIRE(m.get(0).getY() == 3);
         REQUIRE(m.get(0).getZ() == 2);
@@ -68,14 +71,14 @@ TEST_CASE("min & max of matrix", "[matrix]") {
     auto target = GameObject::FromModel(targetMesh->getModel());
     auto truncateAmount = 10000.0;
 
-    REQUIRE((int)(target.minX() * truncateAmount) / truncateAmount == -6.8532);
-    REQUIRE((int)(target.maxX() * truncateAmount) / truncateAmount == 6.8532);
+    REQUIRE((int)(target.minX() * truncateAmount) / truncateAmount == -1);
+    REQUIRE((int)(target.maxX() * truncateAmount) / truncateAmount == 1);
 
-    REQUIRE((int)(target.minY() * truncateAmount) / truncateAmount == -0.5077);
-    REQUIRE((int)(target.maxY() * truncateAmount) / truncateAmount == 0.5077);
+    REQUIRE((int)(target.minY() * truncateAmount) / truncateAmount == -1);
+    REQUIRE((int)(target.maxY() * truncateAmount) / truncateAmount == 1);
 
-    REQUIRE((int)(target.minZ() * truncateAmount) / truncateAmount == -2.6033);
-    REQUIRE((int)(target.maxZ() * truncateAmount) / truncateAmount == 2.6033);
+    REQUIRE((int)(target.minZ() * truncateAmount) / truncateAmount == -1);
+    REQUIRE((int)(target.maxZ() * truncateAmount) / truncateAmount == 1);
 }
 
 TEST_CASE("distance calculation", "[matrix]") {
@@ -83,6 +86,52 @@ TEST_CASE("distance calculation", "[matrix]") {
     auto target = GameObject::FromModel(targetMesh->getModel());
 
     REQUIRE(target.getRadius() == 1.0);
+}
+
+TEST_CASE("translation", "[matrix]") {
+    auto targetMesh = std::make_unique<MyMesh>("cube.obj");
+    auto target = GameObject::FromModel(targetMesh->getModel());
+
+    target.translate(3, 5, 6);
+
+    REQUIRE(target.get(0).getX() == 2);
+    REQUIRE(target.get(0).getY() == 4);
+    REQUIRE(target.get(0).getZ() == 7);
+}
+
+TEST_CASE("rotation", "[matrix]") {
+    auto targetMesh = std::make_unique<MyMesh>("cube.obj");
+    auto target = GameObject::FromModel(targetMesh->getModel());
+    auto truncateAmount = 10000.0;
+
+    target.rotateX(10);
+
+    REQUIRE(target.get(0).getX() == -1);
+    REQUIRE((int)(target.get(0).getY() * truncateAmount) / truncateAmount == -1.1584);
+    REQUIRE((int)(target.get(0).getZ() * truncateAmount) / truncateAmount == 0.8111);
+}
+
+TEST_CASE("scale", "[matrix]") {
+    auto targetMesh = std::make_unique<MyMesh>("cube.obj");
+    auto target = GameObject::FromModel(targetMesh->getModel());
+
+    target.scale(2, 3, 4);
+
+    REQUIRE(target.get(0).getX() == -2);
+    REQUIRE(target.get(0).getY() == -3);
+    REQUIRE(target.get(0).getZ() == 4);
+}
+
+TEST_CASE("origin", "[matrix]") {
+    auto targetMesh = std::make_unique<MyMesh>("cube.obj");
+    auto target = GameObject::FromModel(targetMesh->getModel());
+
+    target.translate(3, 5, 6);
+    auto origin = target.getOrigin();
+
+    REQUIRE(origin.getX() == 3);
+    REQUIRE(origin.getY() == 5);
+    REQUIRE(origin.getZ() == 6);
 }
 
 TEST_CASE("matrix * matrix", "[matrix]") {
@@ -117,4 +166,19 @@ TEST_CASE("matrix * matrix", "[matrix]") {
     Matrix m6 = m4 * m5;
     REQUIRE(m6(0, 0) == 17);
     REQUIRE(m6(1, 0) == 39);
+}
+
+TEST_CASE("intersect", "[matrix]") {
+    auto targetMesh = std::make_unique<MyMesh>("cube.obj");
+    auto target1 = GameObject::FromModel(targetMesh->getModel());
+    auto target2 = GameObject::FromModel(targetMesh->getModel());
+    auto target3 = GameObject::FromModel(targetMesh->getModel());
+    auto target4 = GameObject::FromModel(targetMesh->getModel());
+
+    target3.translate(3, 3, 3);
+    target2.translate(1, 1, 1);
+
+    REQUIRE(target1.intersect(target2));
+    REQUIRE(target2.intersect(target3));
+    REQUIRE(target3.intersect(target4) == false);
 }
