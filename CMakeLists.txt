@@ -16,7 +16,7 @@ endif()
 
 add_subdirectory(external/SFML)
 
-add_executable(LINAL-assessment ${PROJECT_SOURCES})
+add_executable(LINAL-assessment ${PROJECT_SOURCES} src/Bullet.cpp src/Bullet.h)
 add_library(LINAL-library ${PROJECT_SOURCES})
 target_link_libraries(LINAL-assessment sfml-graphics sfml-window)
 target_link_libraries(LINAL-library sfml-graphics sfml-window)

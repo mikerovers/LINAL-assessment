@@ -556,4 +556,11 @@ void Matrix::setCollisionShape(CollisionShape collisionShape)
     Matrix::collisionShape = collisionShape;
 }
 
+void Matrix::addVector(int position, double x, double y, double z)
+{
+    matrix[0][position] = x;
+    matrix[1][position] = y;
+    matrix[2][position] = z;
+}
+
 

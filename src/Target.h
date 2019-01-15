@@ -6,5 +6,6 @@ class Target :
 public:
 	explicit Target(const Matrix &other);
 	~Target();
+	void act() override;
 };
 

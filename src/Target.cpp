@@ -10,3 +10,8 @@ Target::Target(const Matrix & other): Matrix(other)
 Target::~Target()
 {
 }
+
+void Target::act()
+{
+    Matrix::act();
+}

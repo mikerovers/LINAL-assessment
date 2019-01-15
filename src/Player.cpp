@@ -7,6 +7,10 @@ Player::Player(const Matrix & other): Matrix(other)
 	matrix = other.matrix;
 }
 
-Player::~Player()
+Player::Player(unsigned int columns): Matrix(3, columns)
+{}
+
+void Player::act()
 {
+	Matrix::act();
 }

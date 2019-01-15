@@ -1,4 +1,6 @@
 #include "Game.h"
+#include "vmath.h"
+#include "Bullet.h"
 
 Game::Game()
 {
@@ -112,6 +114,17 @@ void Game::start()
 				player->rotateAroundPoint(rotV, 1);
 			}
 
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+				auto bulletMesh = std::make_unique<MyMesh>("round.obj");
+				auto bullet = std::make_shared<Bullet>(GameObject::FromModel(bulletMesh->getModel()));
+				bullet->scale(7, 7, 7);
+				bullet->setLifetime(500);
+				bullet->setDirection(shootDirection.normalize() * 6);
+				bullet->setColor(sf::Color::Green);
+				bullet->translate(pointToShootFrom.getX(), pointToShootFrom.getY(), pointToShootFrom.getZ());
+				bullets.emplace_back(bullet);
+			}
+
 
 			if (player->intersect(*target)) {
 				lost = true;
@@ -125,7 +138,8 @@ void Game::start()
 			text->setCharacterSize(24);
 			text->setFillColor(sf::Color::Red);
 		}
-		Game::reDraw();
+
+		update();
 	}
 
 }
@@ -137,7 +151,6 @@ void Game::createPlayer()
 	player->setColor(sf::Color::Red);
 	player->scale(25, 25, 25);
 	player->setCollisionShape(CollisionShape::SPHERE);
-	player->translate(-150, 0, 0);
 
 	objects.emplace_back(player);
 }
@@ -148,6 +161,7 @@ void Game::createTarget()
 	target = std::make_shared<Target>(GameObject::FromModel(targetMesh->getModel()));
 	target->setColor(sf::Color::Yellow);
 	target->scale(25, 25, 25);
+	target->translate(-1500, -1500, -1500);
 	target->setCollisionShape(CollisionShape::SPHERE);
 	objects.emplace_back(target);
 }
@@ -161,17 +175,16 @@ void Game::createViews()
 
 void Game::reDraw()
 {
-	auto end = pointToShootFrom += shootDirection;
-
 	window->clear();
 	for (auto &view : views) {
 		window->setView(view.getView());
 		view.draw(*window, objects);
+		for (auto &bullet : bullets ) {
+			bullet->draw(*window, view.getViewType());
+		}
 		view.drawText(*window, *text);
 		shootDirection.draw(*window, view.getViewType());
-		pointToShootFrom.draw(*window, view.getViewType());
-		pointToShootFrom.draw(*window, view.getViewType(), end);
-		//end.draw(window, view.getViewType());
+		pointToShootFrom.draw(*window, view.getViewType(), shootDirection);
 	}
 
 	window->display();
@@ -179,10 +192,37 @@ void Game::reDraw()
 
 void Game::update()
 {
-	pointToShootFrom = player->get(4);
-	shootDirection = player->get(6).crossProduct(player->get(5));
-	shootDirection.normalize();
-	shootDirection * 100;
+	auto playerPositionBackup = player->getOrigin();
+	auto invertedPlayerPositionBackup = playerPositionBackup *= -1;
+	player->translate(invertedPlayerPositionBackup.getX(), invertedPlayerPositionBackup.getY(), invertedPlayerPositionBackup.getZ());
+	pointToShootFrom.setX(pointToShootFrom.getX() + invertedPlayerPositionBackup.getX());
+	pointToShootFrom.setY(pointToShootFrom.getY() + invertedPlayerPositionBackup.getY());
+	pointToShootFrom.setZ(pointToShootFrom.getZ() + invertedPlayerPositionBackup.getZ());
+	pointToShootFrom = getMiddle(player->get(10), player->get(8));
+	shootDirection = player->get(0);
+	shootDirection.mirror(pointToShootFrom);
+
+	for (auto &object: objects) {
+		object->act();
+	}
+	for (auto &bullet: bullets) {
+		bullet->act();
+	}
+	for (auto &bullet: bullets) {
+		if (bullet != nullptr) {
+			if (bullet->getLifetime() <= 0) {
+				bullets.erase(std::remove(bullets.begin(), bullets.end(), bullet));
+			}
+		}
+	}
+
+	player->translate(playerPositionBackup.getX(), playerPositionBackup.getY(), playerPositionBackup.getZ());
+	pointToShootFrom.setX(pointToShootFrom.getX() + playerPositionBackup.getX());
+	pointToShootFrom.setY(pointToShootFrom.getY() + playerPositionBackup.getY());
+	pointToShootFrom.setZ(pointToShootFrom.getZ() + playerPositionBackup.getZ());
+	shootDirection.setX(shootDirection.getX() + playerPositionBackup.getX());
+	shootDirection.setY(shootDirection.getY() + playerPositionBackup.getY());
+	shootDirection.setZ(shootDirection.getZ() + playerPositionBackup.getZ());
 
 	targetPulseController->act();
 	Game::reDraw();
