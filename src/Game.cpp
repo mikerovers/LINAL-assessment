@@ -184,7 +184,7 @@ void Game::createPlayer()
 	player = std::make_shared<Player>(GameObject::FromModel(playerMesh->getModel()));
 	player->setColor(sf::Color::Red);
 	player->scale(25, 25, 25);
-	player->setCollisionShape(CollisionShape::SPHERE);
+	player->setCollisionShape(CollisionShape::RECTANGLE);
 
 	objects.emplace_back(player);
 }
