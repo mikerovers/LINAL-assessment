@@ -4,6 +4,9 @@
 
 Game::Game()
 {
+	bulletMesh = std::make_unique<MyMesh>("round.obj");
+	playerMesh = std::make_unique<MyMesh>("player.obj");
+	targetMesh = std::make_unique<MyMesh>("target.obj");
 }
 
 Game::~Game()
@@ -32,8 +35,12 @@ void Game::start()
 
 	sf::Event event;
 	text = std::make_shared<sf::Text>();
-	//sf::Text text;
+	text->setFont(font);
+	text->setPosition(-150, -250);
+	text->setCharacterSize(24);
+
 	bool lost = false;
+	bool win = false;
 	auto rotV = Vector3D{ 10, 8, 6 };
 	while (running && window->isOpen()) {
 		while (window->pollEvent(event)) {
@@ -115,14 +122,7 @@ void Game::start()
 			}
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
-				auto bulletMesh = std::make_unique<MyMesh>("round.obj");
-				auto bullet = std::make_shared<Bullet>(GameObject::FromModel(bulletMesh->getModel()));
-				bullet->scale(7, 7, 7);
-				bullet->setLifetime(250);
-				bullet->setDirection(shootDirection.normalize() * 6);
-				bullet->setColor(sf::Color::Green);
-					bullet->translate(pointToShootFrom.getX(), pointToShootFrom.getY(), pointToShootFrom.getZ());
-				bullets.emplace_back(bullet);
+				createBullet();
 			}
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::H)) {
@@ -133,13 +133,21 @@ void Game::start()
 				lost = true;
 				objects.erase(objects.begin() + 0);
 			}
+
+			for (auto const &bullet: bullets) {
+				if (bullet->intersect(*target)) {
+					win = true;
+				}
+			}
 		}
 		else { // The player has lost
-			text->setFont(font);
 			text->setString("You have collided with an object and lost");
-			text->setPosition(-150, -250);
-			text->setCharacterSize(24);
 			text->setFillColor(sf::Color::Red);
+		}
+
+		if (win) {
+			text->setString("You have destroyed all asteroids and won the game!");
+			text->setFillColor(sf::Color::Green);
 		}
 
 		update();
@@ -149,7 +157,6 @@ void Game::start()
 
 void Game::createPlayer()
 {
-	auto playerMesh = std::make_unique<MyMesh>("player.obj");
 	player = std::make_shared<Player>(GameObject::FromModel(playerMesh->getModel()));
 	player->setColor(sf::Color::Red);
 	player->scale(25, 25, 25);
@@ -160,11 +167,10 @@ void Game::createPlayer()
 
 void Game::createTarget()
 {
-	auto targetMesh = std::make_unique<MyMesh>("target.obj");
 	target = std::make_shared<Target>(GameObject::FromModel(targetMesh->getModel()));
 	target->setColor(sf::Color::Yellow);
 	target->scale(25, 25, 25);
-	target->translate(-1500, -1500, -1500);
+	target->translate(-150, 0, -0);
 	target->setCollisionShape(CollisionShape::SPHERE);
 	objects.emplace_back(target);
 }
@@ -208,10 +214,6 @@ void Game::update()
 
 	pointToShootFrom = player->get(8);
 
-	crossV = player->get(8).crossProduct(player->get(11));
-	crossV = crossV.normalize();
-	crossV * 100;
-
 	shootDirection = player->get(0);
 	shootDirection.mirror(pointToShootFrom);
 
@@ -235,4 +237,16 @@ void Game::update()
 	pointToShootFrom.setZ(pointToShootFrom.getZ() + playerPositionBackup.getZ());
 
 	targetPulseController->act();
+}
+
+void Game::createBullet()
+{
+	auto bullet = std::make_shared<Bullet>(GameObject::FromModel(bulletMesh->getModel()));
+	bullet->scale(7, 7, 7);
+	bullet->setLifetime(250);
+	bullet->setDirection(shootDirection.normalize() * 6);
+	bullet->setColor(sf::Color::Green);
+	bullet->translate(pointToShootFrom.getX(), pointToShootFrom.getY(), pointToShootFrom.getZ());
+	bullet->setCollisionShape(CollisionShape::SPHERE);
+	bullets.emplace_back(bullet);
 }

@@ -16,6 +16,7 @@ public:
 	void start();
 	void createPlayer();
 	void createTarget();
+	void createBullet();
 	void createViews();
 	void reDraw();
 	void update();
@@ -35,5 +36,7 @@ private:
     Vector3D playerPositionBackup{};
 	std::unique_ptr<PulseController> targetPulseController;
 
-	Vector3D crossV;
+	std::unique_ptr<MyMesh> bulletMesh;
+	std::unique_ptr<MyMesh> playerMesh;
+	std::unique_ptr<MyMesh> targetMesh;
 };
