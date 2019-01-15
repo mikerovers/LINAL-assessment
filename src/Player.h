@@ -6,8 +6,11 @@ class Player :
 {
 public:
 	explicit Player(const Matrix &other);
-	explicit Player(unsigned int columns);
 	~Player() = default;
 	void act() override;
+	int getShootTimer() const;
+	void setShootTimer(int shootTimer);
+private:
+	int shootTimer;
 };
 

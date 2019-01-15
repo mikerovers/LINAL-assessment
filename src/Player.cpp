@@ -1,16 +1,25 @@
 #include "Player.h"
 
-Player::Player(const Matrix & other): Matrix(other)
+Player::Player(const Matrix & other): Matrix(other), shootTimer(125)
 {
 	rows = other.rows;
 	columns = other.columns;
 	matrix = other.matrix;
 }
 
-Player::Player(unsigned int columns): Matrix(3, columns)
-{}
-
 void Player::act()
 {
-	Matrix::act();
+	if (shootTimer != 0) {
+		--shootTimer;
+	}
+}
+
+int Player::getShootTimer() const
+{
+	return shootTimer;
+}
+
+void Player::setShootTimer(int shootTimer)
+{
+	Player::shootTimer = shootTimer;
 }

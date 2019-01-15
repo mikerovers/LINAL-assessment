@@ -58,7 +58,7 @@ void Game::start()
 				window->close();
 			}
 		}
-		if (!lost) {
+		if (!lost && !win) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 			{
 				player->translate(-1, 0, 0);
@@ -122,7 +122,10 @@ void Game::start()
 			}
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
-				createBullet();
+				if (player->getShootTimer() == 0) {
+					player->setShootTimer(125);
+					createBullet();
+				}
 			}
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::H)) {
@@ -137,6 +140,8 @@ void Game::start()
 			for (auto const &bullet: bullets) {
 				if (bullet->intersect(*target)) {
 					win = true;
+					objects.erase(std::find(objects.begin(), objects.end(), target));
+					break;
 				}
 			}
 		}
