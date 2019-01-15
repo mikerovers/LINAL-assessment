@@ -6,15 +6,19 @@
 class Bullet : public Matrix
 {
 public:
-    explicit Bullet(const Matrix &other);
-    void act() override;
-    const Vector3D &getDirection() const;
-    void setDirection(const Vector3D &direction);
-    int getLifetime() const;
-    void setLifetime(int lifetime);
+	explicit Bullet(const Matrix &other);
+	void act() override;
+	const Vector3D &getDirection() const;
+	void setDirection(const Vector3D &direction);
+	int getLifetime() const;
+	void setLifetime(int lifetime);
+	void setSpeedVector(Vector3D const newSpeedVector) { speedVector = newSpeedVector; }
+	void setSpeedBoost(bool const boost) { hasSpeedBoost = boost; }
 private:
-    Vector3D direction;
-    int lifetime;
+	Vector3D direction;
+	Vector3D speedVector;
+	int lifetime;
+	bool hasSpeedBoost = false;
 };
 
 

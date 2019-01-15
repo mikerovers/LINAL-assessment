@@ -41,11 +41,11 @@ void Game::start()
 	while (running && window->isOpen()) {
 		while (window->pollEvent(event)) {
 			switch (event.type) {
-				case sf::Event::Closed:
-					window->close();
-					break;
-				default:
-					break;
+			case sf::Event::Closed:
+				window->close();
+				break;
+			default:
+				break;
 			}
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
@@ -55,15 +55,18 @@ void Game::start()
 			}
 		}
 		if (!lost && !win) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
 			{
-				player->translate(-1, 0, 0);
+				player->increaseSpeed();
+				player->setHeading(shootDirection);
 			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-			{
-				player->translate(1, 0, 0);
+			else {
+				if (player->getSpeed() >= 1) {
+					player->decreaseSpeed();
+				}
 			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 			{
 				player->translate(0, -1, 0);
 			}
@@ -71,12 +74,29 @@ void Game::start()
 			{
 				player->translate(0, 1, 0);
 			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+			{
+				player->rotateY(1);
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+			{
+				player->rotateY(-1);
+			}
 
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+			{
+				player->rotate(1);
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
+				player->rotate(-1);
+			}
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::U))
 			{
 				player->scale(1.001, 1.001, 1.001);
 			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::I))
 			{
 				player->scale(0.999, 0.999, 0.999);
 			}
@@ -119,13 +139,16 @@ void Game::start()
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 				if (player->getShootTimer() == 0) {
-					player->setShootTimer(125);
+					player->setShootTimer(75);
 					createBullet();
 				}
 			}
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::H)) {
-				drawHelp = !drawHelp;
+				drawHelp = true;
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::J)) {
+				drawHelp = false;
 			}
 
 			if (player->intersect(*target)) {
@@ -133,7 +156,7 @@ void Game::start()
 				objects.erase(objects.begin() + 0);
 			}
 
-			for (auto const &bullet: bullets) {
+			for (auto const &bullet : bullets) {
 				if (bullet->intersect(*target)) {
 					win = true;
 					objects.erase(std::find(objects.begin(), objects.end(), target));
@@ -161,7 +184,7 @@ void Game::createPlayer()
 	player = std::make_shared<Player>(GameObject::FromModel(playerMesh->getModel()));
 	player->setColor(sf::Color::Red);
 	player->scale(25, 25, 25);
-	player->setCollisionShape(CollisionShape::SPHERE);
+	player->setCollisionShape(CollisionShape::RECTANGLE	);
 
 	objects.emplace_back(player);
 }
@@ -189,7 +212,7 @@ void Game::reDraw()
 	for (auto &view : views) {
 		window->setView(view.getView());
 		view.draw(*window, objects);
-		for (auto &bullet : bullets ) {
+		for (auto &bullet : bullets) {
 			bullet->draw(*window, view.getViewType());
 		}
 		view.drawText(*window, *text);
@@ -218,13 +241,13 @@ void Game::update()
 	shootDirection = player->get(0);
 	shootDirection.mirror(pointToShootFrom);
 
-	for (auto &object: objects) {
+	for (auto &object : objects) {
 		object->act();
 	}
-	for (auto &bullet: bullets) {
+	for (auto &bullet : bullets) {
 		bullet->act();
 	}
-	for (auto &bullet: bullets) {
+	for (auto &bullet : bullets) {
 		if (bullet != nullptr) {
 			if (bullet->getLifetime() <= 0) {
 				bullets.erase(std::remove(bullets.begin(), bullets.end(), bullet));
@@ -249,5 +272,7 @@ void Game::createBullet()
 	bullet->setColor(sf::Color::Green);
 	bullet->translate(pointToShootFrom.getX(), pointToShootFrom.getY(), pointToShootFrom.getZ());
 	bullet->setCollisionShape(CollisionShape::SPHERE);
+	bullet->setSpeedVector(player->getSpeedVector());
+	bullet->setSpeedBoost(player->getSpeed() != 0);
 	bullets.emplace_back(bullet);
 }
